@@ -1,4 +1,4 @@
 # BinaryTreeJS
 Binary Tree Implementation in Javascript
 
-Coding on this is done from scratch. No referential material allowed (aka no internet)
+This project is an exercise and is being done from scratch. No referential material allowed (aka no internet)
