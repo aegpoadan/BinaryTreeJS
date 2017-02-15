@@ -1,36 +1,74 @@
-function tree(name) {
-  this.name = name;
+function nullCheck(node) {
+    if(node == null) {
+      throw new Error("Node cannot be null.");
+    }
+}; 
+
+function tree(node) {
+  nullCheck(node);
+
+  this.node = node;
   this.left = null;
   this.right = null;
-  
-  this.addNode = function(name) {
-    if(name < this.name) {
-      if(this.left != null) {
-        this.left.addNode(name);
+
+  this.lowestNode = function(node) {
+    if(node != null) {
+      if(node.left != null) {
+        return lowestNode(node.left);
       } else {
-        this.left = new tree(name); 
+        return this;
       }
     } else {
-        if(this.right != null) {
-          this.right.addNode(name);
-        } else {
-          this.right = new tree(name);  
-        }
+      return null;
+    }
+  };
+
+  this.highestNode = function(node) {
+    if(node != null) {
+      if(node.right != null) {
+        return highestNode(node.right);
+      } else {
+        return this;
       }
-    };
+    } else {
+      return null;
+    }
+  };
+  
+  this.addNode = function(node) {
+    nullCheck(node);
+
+    if(node < this.node) {
+      if(this.left != null) {
+        this.left.addNode(node);
+      } else {
+        this.left = new tree(node); 
+      }
+    } else {
+      if(this.right != null) {
+        this.right.addNode(node);
+      } else {
+        this.right = new tree(node);  
+      }
+    }
+  };
 
   this.print = function() {
     if(this.left != null) {
       this.left.print();
     }
-    console.log(this.name);
+
+    console.log(this.node);
+
     if(this.right != null) {
       this.right.print();
     }
   };
 
-  this.removeNode = function(name) {
-    if(name == this.left.name) {
+  this.removeNode = function(node) {
+    nullCheck(node);
+
+    if(this.left != null && node == this.left.node) {
       if(this.left.left == null && this.left.right == null) {
         this.left = null;
       } else if(this.left.left == null && this.left.right != null) {
@@ -38,18 +76,20 @@ function tree(name) {
       } else if(this.left.left != null && this.left.right == null) {
         this.left = this.left.left;
       } else {
-        //TODO implement recursive remove
+        var left = this.left;
+        this.left = this.left.right;
+        left.right = lowestNode(this.left); 
       }
-    } else if(name == this.right.name) {
+    } else if(this.right != null && node == this.right.node) {
         //TODO
-    } else if (name == this.name) {
+    } else if (node == this.node) {
         //TODO
     } else {
-      if(this.left.name != null) {
-        this.left.removeNode(name);
+      if(this.left.node != null) {
+        this.left.removeNode(node);
       }
-      if(this.right.name != null) {
-        this.right.removeNode(name);
+      if(this.right.node != null) {
+        this.right.removeNode(node);
       }
     }
   };
