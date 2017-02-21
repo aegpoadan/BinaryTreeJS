@@ -1,14 +1,12 @@
-function nullCheck(node) {
-  "use strict";
+"use strict";
 
+function nullCheck(node) {
   if(node == null) {
     throw new Error("Node cannot be null.");
   }
 }; 
 
-function BinaryTree(node) {
-  "use strict";
-
+function BinaryTreeNode(node) {
   nullCheck(node);
 
   this.node = node;
@@ -16,26 +14,26 @@ function BinaryTree(node) {
   this.right = null;
 
   this.lowestNode = function(node) {
-    if(node != null) {
-      if(node.left != null) {
-        return this.lowestNode(node.left);
-      } else {
-        return this;
-      }
-    } else {
+    if(node == null) {
       return null;
+    } else {
+      if(node.left == null) {
+        return this;
+      } else {
+        return this.lowestNode(node.left);
+      }
     }
   };
 
   this.highestNode = function(node) {
-    if(node != null) {
-      if(node.right != null) {
-        return this.highestNode(node.right);
-      } else {
-        return this;
-      }
-    } else {
+    if(node == null) {
       return null;
+    } else {
+      if(node.right == null) {
+        return this;
+      } else {
+        return this.highestNode(node.right);
+      }    
     }
   };
   
@@ -43,16 +41,16 @@ function BinaryTree(node) {
     nullCheck(node);
 
     if(node < this.node) {
-      if(this.left != null) {
-        this.left.addNode(node);
+      if(this.left == null) {
+        this.left = new BinaryTreeNode(node); 
       } else {
-        this.left = new BinaryTree(node); 
+        return this.left.addNode(node);
       }
     } else {
-      if(this.right != null) {
-        this.right.addNode(node);
+      if(this.right == null) {
+        this.right = new BinaryTreeNode(node); 
       } else {
-        this.right = new BinaryTree(node);  
+        return this.right.addNode(node); 
       }
     }
 
@@ -61,13 +59,13 @@ function BinaryTree(node) {
 
   this.print = function() {
     if(this.left != null) {
-      this.left.print();
+      return this.left.print();
     }
 
     console.log(this.node);
 
     if(this.right != null) {
-      this.right.print();
+      return this.right.print();
     }
   };
 
@@ -106,25 +104,17 @@ function BinaryTree(node) {
         } else if(this.left != null && this.right == null) {
           return this.left;
         } else {
-          var greatestChildLeft = this.highestNode(this.left);
-          var lowestChildRight = this.lowestNode(this.right);
-          var left = this.left;
-          var right = this.right;
-
-          this.left = null;
-          this.right = null;
-
-          greatestChildLeft.right = lowestChildRight;
-          lowestChildRight.left = greatestChildLeft;
+          var greatestChildLeft = new this.highestNode(this.left);
+          //TODO
 
           return greatestChildLeft;    
       }
     } else {
       if(this.left != null) {
-        this.left.removeNode(node);
+        return this.left.removeNode(node);
       }
       if(this.right != null) {
-        this.right.removeNode(node);
+        return this.right.removeNode(node);
       }
       if(this.left == null && this.right == null) {
         return;
@@ -137,9 +127,7 @@ function BinaryTree(node) {
   return this;
 };
 
-BinaryTree.prototype.toString = function() {
-  "use strict";
-  
+BinaryTreeNode.prototype.toString = function() {
   var result = "";
 
   if(this.left != null) {
@@ -153,4 +141,22 @@ BinaryTree.prototype.toString = function() {
   }
 
   return result;
+};
+
+function BinaryTree() {
+  this.root = null;
+
+  this.add = function(node) {
+    nullCheck(node);
+
+    if(root != null) {
+      root.addNode(node);
+    } else {
+      root = node;
+    }
+  };
+
+  this.remove = function(node) {
+
+  }
 };
