@@ -6,7 +6,7 @@ Binary Tree Implementation in Javascript
 var tree = new BinaryTree(0);
 tree.addNode(-1);
 tree.addNode(5);
-tree.addNMode(3);
+tree.addNode(3);
 
 tree.print();
 
