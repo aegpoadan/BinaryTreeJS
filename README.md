@@ -4,16 +4,16 @@ Binary Tree Implementation in Javascript
 ## Usage
 ```javascript
 var tree = new BinaryTree(0);
-tree.addNode(-1);
-tree.addNode(5);
-tree.addNode(3);
+tree.push(-1);
+tree.push(5);
+tree.push(3);
 
 tree.print();
 
-tree.removeNode(-1);
+tree.remove(-1);
 
 tree.print();
 ```
 
 ## Known Bugs
-* Removal of root node causes stack frame limit to be exceeded
+* Cannot remove duplicate nodes

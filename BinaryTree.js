@@ -69,6 +69,8 @@ function BinaryTreeNode(node) {
   };
 
   this.print = function() {
+    nullCheck(this.node);
+
     if(this.left != null) {
       this.left.print();
     }
@@ -111,7 +113,7 @@ function BinaryTreeNode(node) {
       } else if(this.left.left != null && this.left.right == null) {
         this.left = this.left.left;
       } else {
-        var oldLeft = this.left;
+        var oldLeft = Object.assign({}, this.left);
         this.left = this.left.right;
         oldLeft.right = this.lowestNode(); 
       }
@@ -123,7 +125,7 @@ function BinaryTreeNode(node) {
       } else if(this.right.left != null && this.right.right == null) {
         this.right = this.right.left;
       } else {
-        var oldRight = this.right;
+        var oldRight = Object.assign({}, this.right);
         this.right = this.right.left;
         this.highestNode().right = oldRight.right;
       }
@@ -135,13 +137,14 @@ function BinaryTreeNode(node) {
         } else if(this.left != null && this.right == null) {
           return this.left;
         } else {
-          var greatestChildLeft = this.left.highestNode();
-          
+          var greatestChildLeft = Object.assign({}, this.left.highestNode()); //copy of this.left.highestNode()
 
           greatestChildLeft.left = this.left;
           greatestChildLeft.right = this.right;
 
           greatestChildLeft.left.removeNode(greatestChildLeft.node);
+
+          greatestChildLeft.size = this.size - 1;
 
           return greatestChildLeft;
       }
@@ -182,17 +185,35 @@ BinaryTreeNode.prototype.toString = function() {
 function BinaryTree() {
   this.root = null;
 
-  this.add = function(node) {
+  this.push = function(node) {
     nullCheck(node);
 
     if(this.root != null) {
       this.root.addNode(node);
     } else {
-      this.root = node;
+      this.root = new BinaryTreeNode(node);
     }
   };
 
   this.remove = function(node) {
-
+    nullCheck(node);
+    //TODO fix bug with removing duplicates
+    if(this.root != null) {
+      if(this.root.node != node) {
+        this.root.removeNode(node);
+      } else {
+        this.root = this.root.removeNode(node);
+      }
+    }
   };
+
+  this.print = function() {
+    nullCheck(this.root);
+
+    this.root.print();
+  };
+
+  this.size = function() {
+    return this.root.numberOfChildren;
+  }
 };
