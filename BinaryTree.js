@@ -12,29 +12,38 @@ function BinaryTreeNode(node) {
   this.node = node;
   this.left = null;
   this.right = null;
+  this.numberOfChildren = 1;
 
-  this.lowestNode = function(node) {
-    if(node == null) {
-      return null;
+  this.lowestNodeHelper = function(node) {
+    if(node.left == null) {
+      return node;
     } else {
-      if(node.left == null) {
-        return this;
-      } else {
-        return this.lowestNode(node.left);
-      }
+      return this.lowestNodeHelper(node.left);
+    }
+  }
+
+  this.lowestNode = function() {
+    if(this.left == null) {
+      return this;
+    } else {
+      return this.lowestNodeHelper(this.left);
     }
   };
 
-  this.highestNode = function(node) {
-    if(node == null) {
-      return null;
+  this.highestNodeHelper = function(node) {
+    if(node.right == null) {
+      return node;
     } else {
-      if(node.right == null) {
-        return this;
-      } else {
-        return this.highestNode(node.right);
-      }    
+      return this.highestNodeHelper(node.right);
     }
+  }
+
+  this.highestNode = function() {
+    if(this.right == null) {
+      return this;
+    } else {
+      return this.highestNodeHelper(this.right);
+    }    
   };
   
   this.addNode = function(node) {
@@ -42,32 +51,54 @@ function BinaryTreeNode(node) {
 
     if(node < this.node) {
       if(this.left == null) {
+        this.numberOfChildren++;
         this.left = new BinaryTreeNode(node); 
       } else {
+        this.numberOfChildren++;
         return this.left.addNode(node);
       }
     } else {
       if(this.right == null) {
+        this.numberOfChildren++;
         this.right = new BinaryTreeNode(node); 
       } else {
+        this.numberOfChildren++;
         return this.right.addNode(node); 
       }
     }
-
-    return this;
   };
 
   this.print = function() {
     if(this.left != null) {
-      return this.left.print();
+      this.left.print();
     }
 
     console.log(this.node);
 
     if(this.right != null) {
-      return this.right.print();
+      this.right.print();
     }
   };
+
+  this.toArrayHelper = function(result) {
+      if(this.left != null) {
+        this.left.toArrayHelper(result);
+      }
+
+      result.push(this.node);
+
+      if(this.right != null) {
+        this.right.toArrayHelper(result);
+      }
+
+      return result;
+    } 
+
+  this.toArray = function() {
+    var result = [];
+
+    return this.toArrayHelper(result);
+  }
 
   this.removeNode = function(node) {
     nullCheck(node);
@@ -82,7 +113,7 @@ function BinaryTreeNode(node) {
       } else {
         var oldLeft = this.left;
         this.left = this.left.right;
-        oldLeft.right = this.lowestNode(this.left); 
+        oldLeft.right = this.lowestNode(); 
       }
     } else if(this.right != null && node == this.right.node) {
       if(this.right.left == null && this.right.right == null) {
@@ -94,34 +125,39 @@ function BinaryTreeNode(node) {
       } else {
         var oldRight = this.right;
         this.right = this.right.left;
-        this.highestNode(this.right).right = oldRight.right;
+        this.highestNode().right = oldRight.right;
       }
     } else if (node == this.node) {
         if(this.left == null && this.right == null) {
           return null;
-        } else if(this.left == null && this.right != null) {
+        } else if(this.right != null && this.left == null) {
           return this.right;
         } else if(this.left != null && this.right == null) {
           return this.left;
         } else {
-          var greatestChildLeft = new this.highestNode(this.left);
-          //TODO
+          var greatestChildLeft = this.left.highestNode();
+          
 
-          return greatestChildLeft;    
+          greatestChildLeft.left = this.left;
+          greatestChildLeft.right = this.right;
+
+          greatestChildLeft.left.removeNode(greatestChildLeft.node);
+
+          return greatestChildLeft;
       }
     } else {
       if(this.left != null) {
+        this.numberOfChildren--;
         return this.left.removeNode(node);
       }
       if(this.right != null) {
+        this.numberOfChildren--;
         return this.right.removeNode(node);
       }
       if(this.left == null && this.right == null) {
         return;
       }
     }
-
-    return this;
   };
 
   return this;
@@ -149,14 +185,14 @@ function BinaryTree() {
   this.add = function(node) {
     nullCheck(node);
 
-    if(root != null) {
-      root.addNode(node);
+    if(this.root != null) {
+      this.root.addNode(node);
     } else {
-      root = node;
+      this.root = node;
     }
   };
 
   this.remove = function(node) {
 
-  }
+  };
 };
