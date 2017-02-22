@@ -216,4 +216,6 @@ function BinaryTree() {
   this.size = function() {
     return this.root.numberOfChildren;
   }
+
+  return this;
 };
