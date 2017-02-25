@@ -12,7 +12,7 @@ function BinaryTreeNode(node) {
   this.node = node;
   this.left = null;
   this.right = null;
-  this.numberOfChildren = 1;
+  this.numberOfChildren = 0;
 
   this.lowestNodeHelper = function(node) {
     if(node.left == null) {
@@ -214,7 +214,7 @@ function BinaryTree() {
   };
 
   this.size = function() {
-    return this.root.numberOfChildren;
+    return this.root.numberOfChildren + 1;
   }
 
   return this;
